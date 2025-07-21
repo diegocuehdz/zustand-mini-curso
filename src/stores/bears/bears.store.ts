@@ -1,4 +1,6 @@
+/* eslint-disable sort-keys */
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware';
 
 interface Bear {
   id: number;
@@ -11,9 +13,12 @@ interface BearState {
   polarBears: number;
 
   bears: Bear[];
-  computed: {
-    totalBears: number;
-  };
+  // Esto solo funciona sin el persist, si no lo tiene que cambiar a un arrow que lo jale
+  //computed: {
+  //  totalBears: number;
+  //};
+
+  totalBears: () => number;
 
   increaseBlackBears: (by: number) => void;
   increasePandaBears: (by: number) => void;
@@ -24,20 +29,18 @@ interface BearState {
   clearBears: () => void;
 }
 
-export const useBearStore = create<BearState>()((set, get) => ({
-  blackBears: 10,
-  pandaBears: 10,
-  polarBears: 10,
-
+export const useBearStore = create<BearState>()(persist((set, get) => ({
   bears: [{
     id: 1,
     name: 'Bear #1'
   }],
+  blackBears: 10,
+  pandaBears: 10,
+  polarBears: 10,
 
-  computed: {
-    get totalBears(): number {
-      return get().blackBears + get().pandaBears + get().polarBears + get().bears.length;
-    }
+
+  totalBears: () => {
+    return get().blackBears + get().pandaBears + get().polarBears + get().bears.length;
   },
 
   increaseBlackBears: (by) => set((state) => ({ blackBears: state.blackBears + by })),
@@ -49,4 +52,4 @@ export const useBearStore = create<BearState>()((set, get) => ({
     bears: [...state.bears, { id: state.bears.length + 1, name: `Bear #${state.bears.length + 1}` }]
   })),
   clearBears: () => set({ bears: [] })
-}))
+}), { name: 'bear-storage' })); // name of the item in the storage
