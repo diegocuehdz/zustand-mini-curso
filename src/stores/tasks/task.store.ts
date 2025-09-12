@@ -1,5 +1,7 @@
+/* eslint-disable no-param-reassign */
 import { create, StateCreator } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 import { v4 as UUIDv4 } from 'uuid'
 
 import type { Task, TaskStatus } from "../../interfaces";
@@ -15,29 +17,41 @@ export interface TaskState {
   removeDraggingTaskId: () => void;
 }
 
-const storeAPI: StateCreator<TaskState> = (set, get) => ({
+const storeAPI: StateCreator<TaskState, [["zustand/devtools", never], ["zustand/immer", never]]> = (set, get) => ({
   addTask: (title: string, status: TaskStatus) => {
     const newTask: Task = {
       id: UUIDv4(),
       status,
       title,
     }
-    set((state) => ({
-      tasks: {
-        ...state.tasks,
-        [newTask.id]: newTask,
-      }
-    }))
+
+    set((state) => {
+      state.tasks[newTask.id] = newTask;
+    })
+
+    // Forma nativa de Zustand
+    //set((state) => ({
+    //  tasks: {
+    //    ...state.tasks,
+    //    [newTask.id]: newTask,
+    //  }
+    //}))
   },
   changeTaskStatus: (taskId: string, status: TaskStatus) => {
-    const task = get().tasks[taskId];
-    task.status = status;
-    set((state) => ({
-      tasks: {
-        ...state.tasks,
-        [taskId]: task,
-      }
-    }))
+    set((state) => {
+      state.tasks[taskId] = {
+        ...state.tasks[taskId],
+        status,
+      };
+    })
+
+    // Forma nativa de Zustand
+    //set((state) => ({
+    //  tasks: {
+    //    ...state.tasks,
+    //    [taskId]: task,
+    //  }
+    //}))
   },
   draggingTaskId: undefined,
   getTaskByStatus: (status: TaskStatus) => {
@@ -61,4 +75,11 @@ const storeAPI: StateCreator<TaskState> = (set, get) => ({
   },
 })
 
-export const useTaskStore = create<TaskState>()(devtools(storeAPI));
+export const useTaskStore = create<TaskState>()(
+  persist(
+    devtools(
+      immer(storeAPI)
+    ),
+    { name: 'task-store' }
+  )
+);
