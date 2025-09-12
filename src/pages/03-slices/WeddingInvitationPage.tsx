@@ -1,8 +1,16 @@
+import { useWeddingBoundStore } from '../../stores/wedding';
 import { WhiteCard } from '../../components';
 
 
 
 export const WeddingInvitationPage = () => {
+
+  const firstName = useWeddingBoundStore(state => state.firstName);
+  const lastName = useWeddingBoundStore(state => state.lastName);
+
+  const setFirstName = useWeddingBoundStore(state => state.setFirstName);
+  const setLastName = useWeddingBoundStore(state => state.setLastName);
+
   return (
     <>
       <h1>Invitación de Boda</h1>
@@ -21,10 +29,12 @@ export const WeddingInvitationPage = () => {
                     Primer Nombre
                   </label>
                   <input
-                    type="text"
-                    name="firstName"
                     id="firstName"
+                    name="firstName"
                     placeholder="Primer Nombre"
+                    type="text"
+                    value={firstName}
+                    onChange={e => setFirstName(e.target.value)}
                   />
                 </div>
               </div>
@@ -36,10 +46,12 @@ export const WeddingInvitationPage = () => {
                     Apellido
                   </label>
                   <input
-                    type="text"
-                    name="lastName"
                     id="lastName"
+                    name="lastName"
                     placeholder="Apellido"
+                    type="text"
+                    value={lastName}
+                    onChange={e => setLastName(e.target.value)}
                   />
                 </div>
               </div>
@@ -51,12 +63,12 @@ export const WeddingInvitationPage = () => {
                 ¿Cuántos invitados traerá?
               </label>
               <input
-                type="number"
-                name="guestNumber"
-                id="guestNumber"
-                placeholder="5"
-                min="0"
                 className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                id="guestNumber"
+                min="0"
+                name="guestNumber"
+                placeholder="5"
+                type="number"
               />
             </div>
 
@@ -69,9 +81,9 @@ export const WeddingInvitationPage = () => {
                     Fecha de evento
                   </label>
                   <input
-                    type="date"
-                    name="eventDate"
                     id="eventDate"
+                    name="eventDate"
+                    type="date"
                   />
                 </div>
               </div>
@@ -83,9 +95,9 @@ export const WeddingInvitationPage = () => {
                     Hora del evento
                   </label>
                   <input
-                    type="time"
-                    name="eventTime"
                     id="eventTime"
+                    name="eventTime"
+                    type="time"
                   />
                 </div>
               </div>
@@ -98,10 +110,10 @@ export const WeddingInvitationPage = () => {
               <div className="flex items-center space-x-6">
                 <div className="flex items-center">
                   <input
-                    type="radio"
-                    name="isComing"
-                    id="radioButton1"
                     className="h-5 w-5"
+                    id="radioButton1"
+                    name="isComing"
+                    type="radio"
                   />
                   <label
                     className="pl-3 text-base font-medium text-[#07074D]"
@@ -111,10 +123,10 @@ export const WeddingInvitationPage = () => {
                 </div>
                 <div className="flex items-center">
                   <input
-                    type="radio"
-                    name="isComing"
-                    id="radioButton2"
                     className="h-5 w-5"
+                    id="radioButton2"
+                    name="isComing"
+                    type="radio"
                   />
                   <label
                     className="pl-3 text-base font-medium text-[#07074D]"
