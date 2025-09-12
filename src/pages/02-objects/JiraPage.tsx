@@ -14,9 +14,9 @@ export const JiraPage = () => {
       <p>Manejo de estado con objectos de Zustand</p>
       <hr />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <JiraTasks tasks={openTasks} title='Pendientes'  value='open' />
-          <JiraTasks tasks={inProgressTasks} title='Avanzando' value='in-progress' />
-          <JiraTasks tasks={doneTasks} title='Terminadas' value='done' />
+          <JiraTasks status='open' tasks={openTasks} title='Pendientes'   />
+          <JiraTasks status='in-progress'  tasks={inProgressTasks} title='Avanzando' />
+          <JiraTasks status='done' tasks={doneTasks} title='Terminadas' />
       </div>
     </>
   );
